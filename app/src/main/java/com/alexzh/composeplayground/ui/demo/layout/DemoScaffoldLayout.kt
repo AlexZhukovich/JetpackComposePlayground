@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -265,7 +266,30 @@ fun DemoScaffoldLayout_3() {
     )
 }
 
-
+@Preview
+@Composable
+fun Demo_FloatingActionButtonPosition() {
+    Scaffold(
+        topBar = { TopAppBar(title = { Text(text = "Title") }) },
+        content = {
+            Box(
+                modifier = Modifier.fillMaxSize().padding(it),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Content",
+                    fontSize = 40.sp
+                )
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {  }) {
+                Text(text = "Start", fontWeight = FontWeight.Bold)
+            }
+        },
+        floatingActionButtonPosition = FabPosition.Start
+    )
+}
 
 
 

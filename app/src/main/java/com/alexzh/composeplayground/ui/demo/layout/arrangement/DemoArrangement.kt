@@ -1,9 +1,15 @@
 package com.alexzh.composeplayground.ui.demo.layout.arrangement
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
@@ -54,6 +60,66 @@ fun DemoArrangement() {
             modifier = Modifier
                 .border(border = BorderStroke(1.dp, color = Color.White))
                 .padding(8.dp)
+        )
+    }
+}
+
+@Preview
+@Composable
+fun Demo_Arrangement_1() {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .background(Color.Cyan)
+        )
+
+        Spacer(modifier = Modifier.height(64.dp))
+
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .background(Color.Magenta)
+        )
+
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 64.dp)
+            .height(200.dp)
+            .background(Color.Blue)
+        )
+    }
+}
+
+@Preview
+@Composable
+fun Demo_Arrangement_2() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(64.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .background(Color.Cyan)
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .background(Color.Magenta)
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .background(Color.Blue)
+                .padding(bottom = 64.dp)
         )
     }
 }

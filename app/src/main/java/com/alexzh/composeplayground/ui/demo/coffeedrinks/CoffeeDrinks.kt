@@ -4,14 +4,24 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,6 +29,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -45,7 +59,9 @@ fun CoffeeDrinksWithBasket(
     val coffeeDrinks = remember { mutableStateOf(drinks) }
 
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 50.dp)
     ) {
         CoffeeDrinks(
             drinks = coffeeDrinks.value,
@@ -83,8 +99,8 @@ fun CoffeeDrinks(
         items(drinks) { item ->
             Column {
                 Row(
-                    modifier = Modifier.padding(8.dp)
-                        .semantics(mergeDescendants = false) {}
+                    modifier = Modifier.padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
                         painter = painterResource(item.image),
@@ -94,7 +110,8 @@ fun CoffeeDrinks(
                             .padding(start = 8.dp)
                     )
                     Column(
-                        modifier = Modifier.weight(1.0f)
+                        modifier = Modifier
+                            .weight(1.0f)
                             .padding(horizontal = 8.dp)
                     ) {
                         Text(
@@ -105,7 +122,7 @@ fun CoffeeDrinks(
                         Text(
                             text = item.description,
                             fontSize = 14.sp,
-                            maxLines = 3,
+                            maxLines = 4,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -129,7 +146,7 @@ fun Basket(
     total: BigDecimal
 ) {
     Row(
-        modifier = Modifier.background(Color.Blue)
+        modifier = Modifier.background(MaterialTheme.colors.primary)
     ) {
         Text(
             text = "Pay (€ $total)",
@@ -137,7 +154,8 @@ fun Basket(
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(16.dp)
         )
     }
@@ -152,49 +170,62 @@ fun ProductCounter(
 ) {
     Surface(
         shape = RoundedCornerShape(size = 5.dp),
-        border = BorderStroke(1.dp, Color.Gray),
         color = Color.Transparent,
-        modifier = modifier.size(width = 40.dp, height = 85.dp),
+        modifier = modifier.size(width = 42.dp, height = if (coffeeDrink.amount > 0) 100.dp else 42.dp),
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center
-        ) {
-            // TODO: REPLACE IT TO BUTTON
-            Text(
-                text = "＋",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
 
-                modifier = Modifier.height(36.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .align(Alignment.CenterHorizontally)
-                    .clickable {
-                        onProductIncreased(coffeeDrink.id)
-                    }
-            )
-            Text(
-                text = coffeeDrink.amount.toString(),
+        Column(
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.padding(vertical = 4.dp)
+        ) {
+            TextButton(
+                onClick = { onProductIncreased(coffeeDrink.id) },
+                contentPadding = PaddingValues(0.dp),
                 modifier = Modifier
-                    .weight(1f)
-                    .align(Alignment.CenterHorizontally),
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
-            )
-            // TODO: REPLACE IT TO BUTTON
-            Text(
-                text = "—",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.height(36.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .align(Alignment.CenterHorizontally)
-                    .clickable {
-                        onProductDecreased(coffeeDrink.id)
-                    }
-            )
+                    .height(32.dp)
+                    .width(40.dp)
+                    .clearAndSetSemantics {
+                        role = Role.Button
+                        contentDescription = "Add ${coffeeDrink.name} to the basket"
+                    },
+                border = BorderStroke(1.dp, Color.Gray),
+                shape = CircleShape
+            ) {
+                Text(
+                    text = "＋",
+                    fontSize = 16.sp,
+                    color = Color.Black
+                )
+            }
+
+            if (coffeeDrink.amount > 0) {
+                Text(
+                    text = coffeeDrink.amount.toString(),
+                    modifier = modifier.fillMaxWidth(),
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                )
+
+                TextButton(
+                    onClick = { onProductDecreased(coffeeDrink.id) },
+                    contentPadding = PaddingValues(0.dp),
+                    modifier = Modifier
+                        .height(32.dp)
+                        .width(40.dp)
+                        .clearAndSetSemantics {
+                            role = Role.Button
+                            contentDescription = "Remove ${coffeeDrink.name} from the basket"
+                        },
+                    border = BorderStroke(1.dp, Color.Gray),
+                    shape = CircleShape,
+                ) {
+                    Text(
+                        text = "－",
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
+                }
+            }
         }
     }
 }

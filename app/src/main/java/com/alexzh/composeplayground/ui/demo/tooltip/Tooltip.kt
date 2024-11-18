@@ -2,21 +2,17 @@ package com.alexzh.composeplayground.ui.demo.tooltip
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.PlainTooltipBox
-import androidx.compose.material3.RichTooltipBox
+import androidx.compose.material3.PlainTooltip
+import androidx.compose.material3.RichTooltip
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberPlainTooltipState
-import androidx.compose.material3.rememberRichTooltipState
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -28,66 +24,46 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterial3Api
 @Preview
 @Composable
-fun Demo_PlainTooltipBox() {
-    val tooltipState = rememberPlainTooltipState()
-    val scope = rememberCoroutineScope()
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        PlainTooltipBox(
-            tooltip = { Text("Test note") },
-            tooltipState = tooltipState
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = null
-            )
-        }
-        Spacer(Modifier.requiredHeight(30.dp))
-        OutlinedButton(
-            onClick = { scope.launch { tooltipState.show() } },
-        ) {
-            Text("Display tooltip")
-        }
-    }
-}
-
-@ExperimentalMaterial3Api
-@Preview
-@Composable
-fun Demo_RichTooltipBox() {
-    val tooltipState = rememberRichTooltipState(isPersistent = false)
+fun Demo_TooltipBox() {
+    val tooltipState = rememberTooltipState()
+    val richTooltipState = rememberTooltipState()
     val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp)
+            .height(750.dp)
             .padding(top = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        OutlinedButton(
-            onClick = { }
-        ) {
+        OutlinedButton(onClick = { }) {
             Text("Button 1")
         }
 
-        OutlinedButton(
-            onClick = { }
+        TooltipBox(
+            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+            tooltip = { PlainTooltip { Text("Demo text") } },
+            state = tooltipState
         ) {
-            Text("Button 2")
+            OutlinedButton(onClick = { scope.launch { tooltipState.show() } }) {
+                Text("Display tooltip")
+            }
         }
 
-        RichTooltipBox(
-            text = { Text("Show tooltip message on the screen") },
-            tooltipState = tooltipState
+        TooltipBox(
+            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+            tooltip = {
+                RichTooltip(
+                    title = { Text(text = "Super Important") },
+                    text = { Text(text = "Demo text...") },
+                    action = { Text(text = "Demo Action") }
+                )
+            },
+            state = richTooltipState
         ) {
-            OutlinedButton(
-                onClick = { scope.launch { tooltipState.show() } },
-            ) {
-                Text("Display tooltip")
+            OutlinedButton(onClick = { scope.launch { richTooltipState.show() } }) {
+                Text("Display RichTooltip")
             }
         }
     }
